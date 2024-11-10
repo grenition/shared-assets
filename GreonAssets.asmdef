@@ -1,7 +1,8 @@
 {
     "name": "GreonAssets",
+    "rootNamespace": "",
     "references": [
-        "GUID:f547b183e7119419d88303cc8c922ef1"
+        "GUID:75469ad4d38634e559750d17036d5f7c"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
