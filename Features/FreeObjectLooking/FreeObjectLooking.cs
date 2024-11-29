@@ -13,5 +13,6 @@ namespace GreonAssets.Features.FreeObjectLooking
         protected override float scaleDelta { get; }
         protected override bool translateTrigger { get; }
         protected override Vector2 translateDelta { get; }
+        protected override bool focusTrigger { get; }
     }
 }

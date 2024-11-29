@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using GreonAssets.Extensions;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ namespace GreonAssets.Features.FreeObjectLooking
         [SerializeField] protected float _translateSensivity = 5f;
         [SerializeField, Range(0.001f, 1f)] private float _minScale = 0.5f;
         [SerializeField, Range(1f, 1000f)] private float _maxScale = 2f;
+        [SerializeField] protected float _focusDuration = 0.6f;
         
         protected abstract bool rotateTrigger { get; }
         protected abstract Vector2 rotateDelta { get; }
@@ -21,11 +23,13 @@ namespace GreonAssets.Features.FreeObjectLooking
         protected abstract float scaleDelta { get; }
         protected abstract bool translateTrigger { get; }
         protected abstract Vector2 translateDelta { get; }
+        protected abstract bool focusTrigger { get; }
 
         protected Vector3 minScaleVector => _startScale * _minScale; 
         protected Vector3 maxScaleVector => _startScale * _maxScale; 
         
         protected Vector3 _startScale;
+        protected Vector3 _startPosition;
         protected Camera _mainCamera;
         protected Vector3 _rotation;
         
@@ -37,6 +41,7 @@ namespace GreonAssets.Features.FreeObjectLooking
         private void Start()
         {
             _startScale = transform.localScale;
+            _startPosition = transform.position;
         }
 
         private void Update()
@@ -47,6 +52,8 @@ namespace GreonAssets.Features.FreeObjectLooking
                 Rotate(rotateDelta);
             if (scaleTrigger && _allowScalling)
                 Scale(scaleDelta);
+            if (focusTrigger)
+                Focus(_startPosition);
         }
         protected virtual void Rotate(Vector2 delta)
         {
@@ -66,6 +73,10 @@ namespace GreonAssets.Features.FreeObjectLooking
         {
             var direction = _mainCamera.transform.up * delta.y + _mainCamera.transform.right * delta.x;
             transform.Translate(-direction, Space.World);
+        }
+        protected virtual void Focus(Vector3 position)
+        {
+            transform.DOMove(position, _focusDuration).SetEase(Ease.OutSine);
         }
         
         private Vector3 LoopEulers(Vector3 eulers)
