@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace GreonAssets.UI.ComponentAnimations
@@ -164,6 +165,8 @@ namespace GreonAssets.UI.ComponentAnimations
 
         public async Task CloseAsync(bool disableAfterComplete = true)
         {
+            if(!gameObject.activeInHierarchy) return;
+            
             rectTransform.DOKill();
             canvasGroup.DOKill();
 
