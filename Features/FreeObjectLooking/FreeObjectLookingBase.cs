@@ -16,7 +16,7 @@ namespace GreonAssets.Features.FreeObjectLooking
         [SerializeField, Range(0.001f, 1f)] private float _minScale = 0.5f;
         [SerializeField, Range(1f, 1000f)] private float _maxScale = 2f;
         [SerializeField] protected float _focusDuration = 0.6f;
-        
+
         protected abstract bool rotateTrigger { get; }
         protected abstract Vector2 rotateDelta { get; }
         protected abstract bool scaleTrigger { get; }
@@ -25,14 +25,14 @@ namespace GreonAssets.Features.FreeObjectLooking
         protected abstract Vector2 translateDelta { get; }
         protected abstract bool focusTrigger { get; }
 
-        protected Vector3 minScaleVector => _startScale * _minScale; 
-        protected Vector3 maxScaleVector => _startScale * _maxScale; 
-        
+        protected Vector3 minScaleVector => _startScale * _minScale;
+        protected Vector3 maxScaleVector => _startScale * _maxScale;
+
         protected Vector3 _startScale;
         protected Vector3 _startPosition;
         protected Camera _mainCamera;
         protected Vector3 _rotation;
-        
+
         private void OnEnable()
         {
             _mainCamera = Camera.main;
@@ -60,7 +60,7 @@ namespace GreonAssets.Features.FreeObjectLooking
             delta *= _rotationSensitivity;
             _rotation += new Vector3(-delta.y, delta.x * Math.Sign(Vector3.Dot(Vector3.up, transform.up)), 0f);
             _rotation = LoopEulers(_rotation);
-            
+
             transform.localEulerAngles = _rotation;
         }
         protected virtual void Scale(float delta)
@@ -78,7 +78,7 @@ namespace GreonAssets.Features.FreeObjectLooking
         {
             transform.DOMove(position, _focusDuration).SetEase(Ease.OutSine);
         }
-        
+
         private Vector3 LoopEulers(Vector3 eulers)
         {
             return new Vector3

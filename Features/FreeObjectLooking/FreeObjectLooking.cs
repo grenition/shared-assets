@@ -6,8 +6,8 @@ namespace GreonAssets.Features.FreeObjectLooking
     {
         [SerializeField] private float _translateTouchThreshold = 1f;
         [SerializeField] private float _touchSensivity = 0.01f;
-        
-        #if UNITY_ANDROID || UNITY_IOS
+
+#if UNITY_ANDROID || UNITY_IOS
         protected override bool rotateTrigger => Input.touchCount == 1;
         protected override Vector2 rotateDelta
         {
@@ -66,7 +66,7 @@ namespace GreonAssets.Features.FreeObjectLooking
         }
 
         protected override bool focusTrigger => Input.touchCount == 3 && Input.touches[0].phase == TouchPhase.Began;
-        #else
+#else
 
         protected override bool rotateTrigger => Input.GetKey(KeyCode.Mouse0);
         protected override Vector2 rotateDelta => new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
@@ -76,6 +76,6 @@ namespace GreonAssets.Features.FreeObjectLooking
         protected override Vector2 translateDelta => new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
         protected override bool focusTrigger => Input.GetKeyDown(KeyCode.F);
 
-        #endif
+#endif
     }
 }
