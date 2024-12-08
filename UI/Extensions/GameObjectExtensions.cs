@@ -7,32 +7,40 @@ namespace GreonAssets.UI.Extensions
 {
     public static class GameObjectExtensions
     {
-        public static void CloseWithAnimation(this GameObject obj)
+        public static void SetActiveWithAnimation(this GameObject obj, bool activeState, bool disableAfterComplete = true)
         {
-            if(obj == null) return;
-            if(obj.TryGetComponent(out UIOpenCloseAnimations animationComponent))
-            {
-                animationComponent.Close();
-                return;
-            }
-            obj.gameObject.SetActive(false);
-        }
-        public static async Task CloseWithAnimationAsync(this GameObject obj)
-        {
-            if(obj == null) return;
-            if(obj.TryGetComponent(out UIOpenCloseAnimations animationComponent))
-            {
-                await animationComponent.CloseAsync();
-                return;
-            }
-            obj.gameObject.SetActive(false);
+            if (activeState)
+                obj.SetActive(true);
+            else
+                obj.CloseWithAnimation(disableAfterComplete);
         }
         
-        public static void CloseWithChildrensAnimation(this GameObject obj)
+        public static void CloseWithAnimation(this GameObject obj, bool disableAfterComplete = true)
         {
-            _ = CloseWithChildrensAnimationAsync(obj);
+            if(obj == null) return;
+            if(obj.TryGetComponent(out UIOpenCloseAnimations animationComponent))
+            {
+                animationComponent.Close(disableAfterComplete);
+                return;
+            }
+            obj.gameObject.SetActive(obj.gameObject.activeSelf && !disableAfterComplete);
         }
-        public static async Task CloseWithChildrensAnimationAsync(this GameObject obj)
+        public static async Task CloseWithAnimationAsync(this GameObject obj, bool disableAfterComplete = true)
+        {
+            if(obj == null) return;
+            if(obj.TryGetComponent(out UIOpenCloseAnimations animationComponent))
+            {
+                await animationComponent.CloseAsync(disableAfterComplete);
+                return;
+            }
+            obj.gameObject.SetActive(obj.gameObject.activeSelf && !disableAfterComplete);
+        }
+        
+        public static void CloseWithChildrensAnimation(this GameObject obj, bool disableAfterComplete = true)
+        {
+            _ = CloseWithChildrensAnimationAsync(obj, disableAfterComplete);
+        }
+        public static async Task CloseWithChildrensAnimationAsync(this GameObject obj, bool disableAfterComplete = true)
         {
             if (obj == null) return;
 
@@ -45,13 +53,13 @@ namespace GreonAssets.UI.Extensions
             {
                 if (animation.gameObject == obj)
                     rootObjectAnimated = true;
-                closeTasks.Add(animation.CloseAsync(animation.gameObject == obj));
+                closeTasks.Add(animation.CloseAsync(animation.gameObject == obj && disableAfterComplete));
             }
 
             await Task.WhenAll(closeTasks);
 
             if (!rootObjectAnimated)
-                obj.SetActive(false);
+                obj.SetActive(obj.activeSelf && !disableAfterComplete);
         }
     }
 }
